@@ -1,12 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Timers;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Forms;
 using System.Windows.Input;
 using AlarmClock.Model;
+using AlarmClock.Properties;
 using MahApps.Metro.Controls;
+using Application = System.Windows.Application;
 using DateTime = System.DateTime;
+using Timer = System.Timers.Timer;
 
 namespace AlarmClock
 {
@@ -21,24 +27,32 @@ namespace AlarmClock
         private readonly Timer _updateSetTextTimer = new Timer(1000);
         private bool _isInAlarmScreen = false;
         private bool _isEveryday = false;
-
+        private readonly NotifyIcon _notifyIcon;
+        private ContextMenuStrip _contextMenu = new ContextMenuStrip();
         public MainWindow()
         {
             InitializeComponent();
             DateLabel.Content = DateTime.Now.ToLongDateString();
             TimeLabel.Content = DateTime.Now.ToLongTimeString();
+            _notifyIcon = new NotifyIcon();
             _clockTimer.Start();
             _clockTimer.Elapsed += ClockTimerElapsed;
             _updateSetTextTimer.Start();
             _updateSetTextTimer.Elapsed += UpdateSetTextTimerElapsed;
             AlarmClockToggle.Content = "No Alarms";
             AlarmManager.AlarmRaised += AlarmManagerAlarmRaised;
+            _notifyIcon.Visible = true;
+            _notifyIcon.Icon = Properties.Resources.icon;
+            _notifyIcon.DoubleClick += NotifyIconDoubleClick;
+            CreateIconMenuStructure("Open");
+            CreateIconMenuStructure("Exit");
+            _notifyIcon.ContextMenuStrip = _contextMenu;
             PopulateList();
         }
 
         private void AlarmManagerAlarmRaised(object sender, EventArgs e)
         {
-            ExcuteRaiseAlarm((Alarm) sender);
+            ExcuteRaiseAlarm((Alarm)sender);
         }
 
         private void ExcuteRaiseAlarm(Alarm alarm)
@@ -50,7 +64,12 @@ namespace AlarmClock
         private void UpdateSetTextTimerElapsed(object sender, ElapsedEventArgs e)
         {
             if (Application.Current != null)
-                Application.Current.Dispatcher.Invoke(() => { AlarmClockToggle.Content = GetTextForAlarmClockToggle(); });
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    var textForAlarmClockToggle = GetTextForAlarmClockToggle();
+                    AlarmClockToggle.Content = textForAlarmClockToggle;
+                    _notifyIcon.Text = textForAlarmClockToggle;
+                });
         }
 
         private string GetTextForAlarmClockToggle()
@@ -170,6 +189,54 @@ namespace AlarmClock
             aboutWindow.Owner = this;
             aboutWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             aboutWindow.ShowDialog();
+        }
+
+
+        private void NotifyIconDoubleClick(object sender, EventArgs e)
+        {
+            
+            this.Show();
+            this.WindowState = WindowState.Normal;
+            ShowInTaskbar = true;
+            this.Activate();
+
+        }
+
+        private void MainWindowOnStateChanged(object sender, EventArgs e)
+        {
+            if (this.WindowState == WindowState.Minimized)
+            {
+                this.Hide();
+                ShowInTaskbar = false;
+            }
+
+        }
+
+        public void CreateIconMenuStructure(string caption)
+        {
+            _contextMenu.Items.Add(caption,null, OnClick);
+        }
+
+        private void OnClick(object sender, EventArgs e)
+        {
+            var menuItem = (ToolStripMenuItem)sender;
+            switch (menuItem.Text)
+            {
+                case "Exit":
+                    Application.Current.Shutdown(0);
+                    break;
+                case "Open":
+                    this.Show();
+                    this.WindowState = WindowState.Normal;
+                    ShowInTaskbar = true;
+                    this.Activate();
+                    break;
+            }
+        }
+
+        private void MainWindowOnClosing(object sender, CancelEventArgs e)
+        {
+            _notifyIcon.Visible = false;
         }
     }
 }

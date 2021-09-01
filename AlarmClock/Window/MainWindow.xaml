@@ -9,6 +9,8 @@
     Title="Clock"
     Width="450"
     Height="200"
+    StateChanged="MainWindowOnStateChanged"
+    Closing="MainWindowOnClosing"
     GlowBrush="{DynamicResource MahApps.Brushes.Accent}"
     ResizeMode="CanMinimize"
     WindowStartupLocation="CenterScreen"
