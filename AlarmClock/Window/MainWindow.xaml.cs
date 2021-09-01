@@ -4,7 +4,7 @@ using System.Linq;
 using System.Timers;
 using System.Windows;
 using System.Windows.Input;
-using AlarmClock.Models;
+using AlarmClock.Model;
 using MahApps.Metro.Controls;
 using DateTime = System.DateTime;
 

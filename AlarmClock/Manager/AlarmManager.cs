@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using AlarmClock.Models;
+using AlarmClock.Model;
 using Newtonsoft.Json;
 
 namespace AlarmClock

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Timers;
 using System.Windows;
-using AlarmClock.Models;
 using AlarmClock.Properties;
 
 namespace AlarmClock.Model
