@@ -29,7 +29,8 @@
             <ToggleButton
                 x:Name="AlarmClockToggle"
                 Click="AlarmClockToggleClick"
-                Content="Next Alarm at 10 mins">
+                Content="Next Alarm at 10 mins"
+                ToolTip="Click to toggle between Clock and Alarms">
                 <ToggleButton.ContentTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
@@ -37,7 +38,7 @@
                                 Width="22"
                                 Height="22"
                                 VerticalAlignment="Center"
-                                Foreground="LightGreen"
+                                Foreground="White"
                                 Kind="Alert" />
                             <TextBlock
                                 Margin="4,0,0,0"

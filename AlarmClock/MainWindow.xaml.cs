@@ -118,6 +118,7 @@ namespace AlarmClock
             _isInAlarmScreen = AlarmClockToggle.IsChecked.Value;
             ClockGrid.Visibility = !_isInAlarmScreen ? Visibility.Visible : Visibility.Hidden;
             AlarmGrid.Visibility = _isInAlarmScreen ? Visibility.Visible : Visibility.Hidden;
+            AlarmClockToggle.Content = GetTextForAlarmClockToggle();
         }
 
         private void IsEverydayCheckBoxOnClick(object sender, RoutedEventArgs e)
