@@ -2,7 +2,7 @@
 using System.Timers;
 using System.Windows;
 
-namespace AlarmClock.Models
+namespace AlarmClock.Model
 {
     public class Snooze : IDisposable
     {
