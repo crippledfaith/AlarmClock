@@ -110,10 +110,7 @@ namespace AlarmClock
             }
         }
 
-        private void LaunchGitHubSite(object sender, RoutedEventArgs e)
-        {
-            // Launch the GitHub site...
-        }
+
 
 
         private void AlarmClockToggleClick(object sender, RoutedEventArgs e)
@@ -163,6 +160,14 @@ namespace AlarmClock
         {
             AlarmManager.RemoveAlarm((Alarm)AlarmListbox.SelectedItem);
             PopulateList();
+        }
+
+        private void About(object sender, RoutedEventArgs e)
+        {
+            var aboutWindow = new AboutWindow();
+            aboutWindow.Owner = this;
+            aboutWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            aboutWindow.ShowDialog();
         }
     }
 }
