@@ -9,7 +9,7 @@ namespace AlarmClock.Model
     public class Alarm : IDisposable
     {
         public event EventHandler AlarmRaised;
-        Timer _timer = new Timer(1000);
+        Timer _timer = new Timer(600);
         public Alarm(bool isEveryday, DateTime dateTime)
         {
             IsEveryday = isEveryday;
@@ -32,7 +32,10 @@ namespace AlarmClock.Model
             }
             if (Convert.ToInt64(TimeLeft.TotalSeconds) == 0)
             {
-                Application.Current.Dispatcher.Invoke(() => { AlarmRaised?.Invoke(this, EventArgs.Empty); });
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    OnAlarmRaised();
+                });
 
             }
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Timers;
@@ -29,6 +30,7 @@ namespace AlarmClock
         private bool _isEveryday = false;
         private readonly NotifyIcon _notifyIcon;
         private ContextMenuStrip _contextMenu = new ContextMenuStrip();
+        OpenFileDialog opDialog = new OpenFileDialog();
         public MainWindow()
         {
             InitializeComponent();
@@ -47,7 +49,7 @@ namespace AlarmClock
             CreateIconMenuStructure("Open");
             CreateIconMenuStructure("Exit");
             _notifyIcon.ContextMenuStrip = _contextMenu;
-            PopulateList();
+            opDialog.Filter = "Wave File(*.wav)|*.wav";
         }
 
         private void AlarmManagerAlarmRaised(object sender, EventArgs e)
@@ -135,6 +137,7 @@ namespace AlarmClock
 
         private void AlarmClockToggleClick(object sender, RoutedEventArgs e)
         {
+            PopulateList();
             _isInAlarmScreen = AlarmClockToggle.IsChecked.Value;
             ClockGrid.Visibility = !_isInAlarmScreen ? Visibility.Visible : Visibility.Hidden;
             AlarmGrid.Visibility = _isInAlarmScreen ? Visibility.Visible : Visibility.Hidden;
@@ -143,45 +146,73 @@ namespace AlarmClock
 
         private void IsEverydayCheckBoxOnClick(object sender, RoutedEventArgs e)
         {
+            IsEverydayCheckBoxChanged();
+        }
+
+        private void IsEverydayCheckBoxChanged()
+        {
             _isEveryday = IsEverydayCheckBox.IsChecked.Value;
             AlarmTimePicker.Visibility = _isEveryday ? Visibility.Visible : Visibility.Collapsed;
             AlarmDateTimePicker.Visibility = _isEveryday ? Visibility.Collapsed : Visibility.Visible;
         }
+        private void SetAlarmSoundButtonOnClick(object sender, RoutedEventArgs e)
+        {
+            var dialogResult = opDialog.ShowDialog();
+            if (dialogResult == System.Windows.Forms.DialogResult.OK)
+            {
 
+            }
+        }
         private void SetAlarmButtonOnClick(object sender, RoutedEventArgs e)
         {
+            Alarm alarm = null;
             if (_isEveryday)
             {
                 if (AlarmTimePicker.SelectedDateTime.HasValue)
                 {
-                    AlarmManager.SetAlarm(new Alarm(_isEveryday, AlarmTimePicker.SelectedDateTime.Value));
+                    var now = DateTime.Now;
+                    var date = AlarmTimePicker.SelectedDateTime.Value;
+                    var newDate = new DateTime(now.Year, now.Month, now.Day, date.Hour, date.Minute, date.Second);
+                    alarm = new Alarm(_isEveryday, newDate);
+                    AlarmManager.SetAlarm(alarm);
                 }
             }
             else
             {
                 if (AlarmDateTimePicker.SelectedDateTime.HasValue)
                 {
-                    AlarmManager.SetAlarm(new Alarm(_isEveryday, AlarmDateTimePicker.SelectedDateTime.Value));
+                    alarm = new Alarm(_isEveryday, AlarmDateTimePicker.SelectedDateTime.Value);
+                    AlarmManager.SetAlarm(alarm);
                 }
             }
-
+            if (!string.IsNullOrEmpty(opDialog.FileName))
+                alarm.AlarmFile = opDialog.FileName;
+            opDialog.FileName = "";
             PopulateList();
         }
 
         private void PopulateList()
         {
-            AlarmListbox.Items.Clear();
-            foreach (var alarm in AlarmManager.GetAlarms())
-            {
-                AlarmListbox.Items.Add(alarm);
-            }
+            AlarmDataGrid.ItemsSource = AlarmManager.GetAlarms();
+            AlarmDataGrid.AutoGenerateColumns = true;
+            AlarmDataGrid.Columns[0].Visibility = Visibility.Hidden;
+            AlarmDataGrid.Columns[1].Visibility = Visibility.Hidden;
+            AlarmDataGrid.Columns[2].Header = "Every Day";
+            AlarmDataGrid.Columns[2].IsReadOnly = true;
+            AlarmDataGrid.Columns[3].Visibility = Visibility.Hidden;
+            AlarmDataGrid.Columns[4].Visibility = Visibility.Hidden;
+            AlarmDataGrid.Columns[5].Visibility = Visibility.Hidden;
+            AlarmDataGrid.Columns[6].Header = "Date Time";
+            AlarmDataGrid.Columns[6].IsReadOnly = true;
+            AlarmDataGrid.Columns[7].Header = "Disabled";
+
+            AlarmDataGrid.Columns[7].IsReadOnly = false;
+            AlarmDataGrid.Columns[8].Visibility = Visibility.Hidden;
+            AlarmDataGrid.Columns[9].Visibility = Visibility.Hidden;
+            AlarmDataGrid.Columns[10].Visibility = Visibility.Hidden;
+
         }
 
-        private void AlarmListboxOnMouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            AlarmManager.RemoveAlarm((Alarm)AlarmListbox.SelectedItem);
-            PopulateList();
-        }
 
         private void About(object sender, RoutedEventArgs e)
         {
@@ -194,7 +225,7 @@ namespace AlarmClock
 
         private void NotifyIconDoubleClick(object sender, EventArgs e)
         {
-            
+
             this.Show();
             this.WindowState = WindowState.Normal;
             ShowInTaskbar = true;
@@ -214,7 +245,7 @@ namespace AlarmClock
 
         public void CreateIconMenuStructure(string caption)
         {
-            _contextMenu.Items.Add(caption,null, OnClick);
+            _contextMenu.Items.Add(caption, null, OnClick);
         }
 
         private void OnClick(object sender, EventArgs e)
@@ -238,5 +269,20 @@ namespace AlarmClock
         {
             _notifyIcon.Visible = false;
         }
+
+
+        private void AlarmDataGridOnMouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            var selectedItem = AlarmDataGrid.SelectedItem as Alarm;
+            if (selectedItem == null) return;
+            IsEverydayCheckBox.IsChecked = selectedItem.IsEveryday;
+            AlarmDateTimePicker.SelectedDateTime = selectedItem.DateTime;
+            AlarmTimePicker.SelectedDateTime = selectedItem.DateTime;
+            AlarmManager.RemoveAlarm(selectedItem);
+            IsEverydayCheckBoxChanged();
+            PopulateList();
+        }
+
+
     }
 }

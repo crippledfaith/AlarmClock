@@ -9,10 +9,10 @@
     Title="Clock"
     Width="450"
     Height="200"
-    StateChanged="MainWindowOnStateChanged"
     Closing="MainWindowOnClosing"
     GlowBrush="{DynamicResource MahApps.Brushes.Accent}"
     ResizeMode="CanMinimize"
+    StateChanged="MainWindowOnStateChanged"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
     <mah:MetroWindow.LeftWindowCommands>
@@ -84,6 +84,7 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <CheckBox
                     x:Name="IsEverydayCheckBox"
@@ -100,17 +101,34 @@
                     Grid.Row="0"
                     Grid.Column="1" />
                 <Button
-                    x:Name="SetAlarmButton"
+                    x:Name="SetAlarmSoundButton"
                     Grid.Row="0"
                     Grid.Column="2"
-                    Click="SetAlarmButtonOnClick"
-                    Content="Set" />
+                    Click="SetAlarmSoundButtonOnClick">
+                    <iconPacks:PackIconModern
+                        Width="22"
+                        Height="22"
+                        Kind="Settings" />
+                </Button>
+                <Button
+                    x:Name="SetAlarmButton"
+                    Grid.Row="0"
+                    Grid.Column="3"
+                    Click="SetAlarmButtonOnClick">
+                    <iconPacks:PackIconModern
+                        Width="22"
+                        Height="22"
+                        Kind="ArrowRight" />
+                </Button>
             </Grid>
-            <ListBox
-                x:Name="AlarmListbox"
+            <DataGrid
+                x:Name="AlarmDataGrid"
                 Grid.Row="1"
+                MouseDoubleClick="AlarmDataGridOnMouseDoubleClick" />
+            <!--<ListBox
+                x:Name="AlarmListbox"
                 DisplayMemberPath="DisplayDateTime"
-                MouseDoubleClick="AlarmListboxOnMouseDoubleClick" />
+                MouseDoubleClick="AlarmListboxOnMouseDoubleClick" />-->
             <!--  Your content  -->
 
         </Grid>

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Media;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -23,6 +24,7 @@ namespace AlarmClock
     {
         private SoundPlayer player;
         private Alarm alarm;
+        private Timer timer = new Timer(5000);
         public AlarmWindow(Alarm alarm)
         {
             InitializeComponent();
@@ -31,6 +33,18 @@ namespace AlarmClock
             alarm.Snooze.SnoozeRaised += SnoozeSnoozeRaised;
             player = new SoundPlayer(alarm.AlarmFile);
             player.PlayLooping();
+            timer.Start();
+            timer.Elapsed += TimerElapsed;
+        }
+
+        private void TimerElapsed(object sender, ElapsedEventArgs e)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                timer.Interval = 1000;
+                TimeLabel.Content = DateTime.Now.ToString();
+            });
+
         }
 
         private void SnoozeSnoozeRaised(object sender, EventArgs e)
