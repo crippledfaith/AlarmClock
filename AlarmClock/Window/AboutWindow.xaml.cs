@@ -15,7 +15,7 @@ namespace AlarmClock
             Assembly assembly = Assembly.GetExecutingAssembly();
             FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
             string version = fvi.FileVersion;
-            VersionLabel.Content = version;
+            VersionLabel.Content = $"Version : {version}";
         }
 
         private void Hyperlink_OnRequestNavigate(object sender, RequestNavigateEventArgs e)
