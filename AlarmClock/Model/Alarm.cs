@@ -9,7 +9,8 @@ namespace AlarmClock.Model
     public class Alarm : IDisposable
     {
         public event EventHandler AlarmRaised;
-        Timer _timer = new Timer(600);
+        Timer _timer = new Timer(1000);
+        private DateTime _dateTime;
         public Alarm(bool isEveryday, DateTime dateTime)
         {
             IsEveryday = isEveryday;
@@ -30,7 +31,9 @@ namespace AlarmClock.Model
                     _timer.Stop();
                 });
             }
-            if (Convert.ToInt64(TimeLeft.TotalSeconds) == 0)
+
+            var totalSeconds = Convert.ToInt64(TimeLeft.TotalSeconds);
+            if (totalSeconds <= 0 && totalSeconds > -1)
             {
                 Application.Current.Dispatcher.Invoke(() =>
                 {
@@ -50,7 +53,7 @@ namespace AlarmClock.Model
                     var dateTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Hour,
                         DateTime.Minute, DateTime.Second);
                     var timeLeft = dateTime - DateTime.Now;
-                    if (timeLeft.TotalSeconds > 0)
+                    if (timeLeft.TotalSeconds > -1)
                         return timeLeft;
                     dateTime = dateTime.AddDays(1);
                     timeLeft = dateTime - DateTime.Now;
@@ -62,7 +65,37 @@ namespace AlarmClock.Model
 
         public string Id { get; set; }
         public bool IsEveryday { get; set; }
-        public DateTime DateTime { get; set; }
+
+        public DateTime DateTime
+        {
+            get
+            {
+                if (IsEveryday)
+                {
+                    var dateTime = DateTime.Now;
+                    if (_dateTime.Year != dateTime.Year && _dateTime.Month != dateTime.Month && _dateTime.Day != dateTime.Day)
+                        _dateTime = new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, _dateTime.Hour, _dateTime.Minute, _dateTime.Second);
+                    return _dateTime;
+                }
+                else
+                {
+                    return _dateTime;
+                }
+            }
+            set
+            {
+                if (IsEveryday)
+                {
+                    var dateTime = DateTime.Now;
+                    _dateTime = new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, value.Hour, value.Minute, value.Second);
+                }
+                else
+                {
+                    _dateTime = value;
+                }
+            }
+        }
+
         public TimeSpan SnoozeTime { get; set; }
         public Snooze Snooze { get; set; }
         public string DisplayDateTime => !IsEveryday ? DateTime.ToString() : DateTime.ToShortTimeString();

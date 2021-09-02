@@ -60,7 +60,7 @@ namespace AlarmClock
         public static Alarm GetNextAlarm()
         {
             if (!ActiveAlarms.Any()) return null;
-            return ActiveAlarms.FirstOrDefault();
+            return ActiveAlarms.OrderBy(q=>q.TimeLeft).FirstOrDefault();
         }
 
 

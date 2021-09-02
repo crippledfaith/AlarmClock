@@ -11,7 +11,7 @@ namespace AlarmClock.Model
         public DateTime SnoozeDateTime { get; set; }
         public TimeSpan SnoozeTimeSpan => SnoozeDateTime - DateTime.Now;
         public bool Paused { get; set; }
-        Timer _timer = new Timer(1000);
+        Timer _timer = new Timer(600);
 
         public Snooze(DateTime snoozeDateTime)
         {
@@ -21,9 +21,10 @@ namespace AlarmClock.Model
 
         private void TimerElapsed(object sender, ElapsedEventArgs e)
         {
-            if (Convert.ToInt64(SnoozeTimeSpan.TotalSeconds) == 0)
+            var totalSeconds = Convert.ToInt64(SnoozeTimeSpan.TotalSeconds);
+            if (totalSeconds <= 0 && totalSeconds > -1)
             {
-                Application.Current.Dispatcher.Invoke(()=>
+                Application.Current.Dispatcher.Invoke(() =>
                 {
                     IsActive = false;
                     OnSnoozeRaised();

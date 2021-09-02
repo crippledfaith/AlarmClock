@@ -42,6 +42,7 @@
                 </Grid.RowDefinitions>
                 <Label Content="Alarm Clock" FontSize="20" />
                 <Label
+                    x:Name="VersionLabel"
                     Grid.Row="1"
                     Margin="0,-10,0,0"
                     Content="Version: 1.0.0"
