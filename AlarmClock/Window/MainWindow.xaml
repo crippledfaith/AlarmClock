@@ -17,7 +17,7 @@
     mc:Ignorable="d">
     <mah:MetroWindow.LeftWindowCommands>
         <mah:WindowCommands>
-            <Button Click="About">
+            <Button Click="About" ToolTip="About">
                 <iconPacks:PackIconModern
                     Width="22"
                     Height="22"
@@ -121,15 +121,13 @@
                         Kind="ArrowRight" />
                 </Button>
             </Grid>
-            <DataGrid
-                x:Name="AlarmDataGrid"
-                Grid.Row="1"
-                MouseDoubleClick="AlarmDataGridOnMouseDoubleClick" />
-            <!--<ListBox
-                x:Name="AlarmListbox"
-                DisplayMemberPath="DisplayDateTime"
-                MouseDoubleClick="AlarmListboxOnMouseDoubleClick" />-->
-            <!--  Your content  -->
+            <StackPanel Grid.Row="1" Orientation="Vertical">
+                <DataGrid
+                    x:Name="AlarmDataGrid"
+                    MouseDoubleClick="AlarmDataGridOnMouseDoubleClick"
+                    ToolTip="Double click to delete." />
+            </StackPanel>
+
 
         </Grid>
     </Grid>
