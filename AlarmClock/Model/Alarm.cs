@@ -33,7 +33,7 @@ namespace AlarmClock.Model
             }
 
             var totalSeconds = Convert.ToInt64(TimeLeft.TotalSeconds);
-            if (totalSeconds <= 0 && totalSeconds > -1)
+            if (totalSeconds < 1 && totalSeconds > -1)
             {
                 Application.Current.Dispatcher.Invoke(() =>
                 {

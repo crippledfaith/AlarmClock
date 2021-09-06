@@ -22,7 +22,7 @@ namespace AlarmClock.Model
         private void TimerElapsed(object sender, ElapsedEventArgs e)
         {
             var totalSeconds = Convert.ToInt64(SnoozeTimeSpan.TotalSeconds);
-            if (totalSeconds <= 0 && totalSeconds > -1)
+            if (totalSeconds < 1 && totalSeconds > -1)
             {
                 Application.Current.Dispatcher.Invoke(() =>
                 {

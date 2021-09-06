@@ -64,13 +64,12 @@
                 x:Name="DateLabel"
                 Grid.Row="0"
                 HorizontalContentAlignment="Center"
-                FontSize="30" />
+                FontSize="34" />
             <Label
                 x:Name="TimeLabel"
                 Grid.Row="1"
                 HorizontalContentAlignment="Center"
-                FontSize="75" />
-            <!--  Your content  -->
+                FontSize="77" />
 
         </Grid>
         <Grid x:Name="AlarmGrid" Visibility="Hidden">

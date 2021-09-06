@@ -100,18 +100,18 @@ namespace AlarmClock
         {
             if (timeSpan.TotalDays > 1)
             {
-                return $"{Math.Round(timeSpan.TotalDays):####} days";
+                return $"{Math.Ceiling(timeSpan.TotalDays):####} days";
             }
             if (timeSpan.TotalHours > 1)
             {
-                return $"{Math.Round(timeSpan.TotalHours):####} hrs";
+                return $"{Math.Ceiling(timeSpan.TotalHours):####} hrs";
             }
             if (timeSpan.TotalMinutes > 1)
             {
-                return $"{Math.Round(timeSpan.TotalMinutes):####} mins";
+                return $"{Math.Ceiling(timeSpan.TotalMinutes):####} mins";
             }
 
-            return $"{Math.Round(timeSpan.TotalSeconds):####} secs";
+            return $"{Math.Ceiling(timeSpan.TotalSeconds):####} secs";
 
         }
 
