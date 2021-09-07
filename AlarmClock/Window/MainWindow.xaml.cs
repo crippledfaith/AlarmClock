@@ -50,6 +50,8 @@ namespace AlarmClock
             CreateIconMenuStructure("Exit");
             _notifyIcon.ContextMenuStrip = _contextMenu;
             opDialog.Filter = "Wave File(*.wav)|*.wav";
+            AlarmDateTimePicker.SelectedDateTime = DateTime.Now;
+            AlarmTimePicker.SelectedDateTime = DateTime.Now;
         }
 
         private void AlarmManagerAlarmRaised(object sender, EventArgs e)
@@ -132,9 +134,6 @@ namespace AlarmClock
             }
         }
 
-
-
-
         private void AlarmClockToggleClick(object sender, RoutedEventArgs e)
         {
             PopulateList();
@@ -201,15 +200,13 @@ namespace AlarmClock
             AlarmDataGrid.Columns[2].IsReadOnly = true;
             AlarmDataGrid.Columns[3].Visibility = Visibility.Hidden;
             AlarmDataGrid.Columns[4].Visibility = Visibility.Hidden;
-            AlarmDataGrid.Columns[5].Visibility = Visibility.Hidden;
-            AlarmDataGrid.Columns[6].Header = "Date Time";
-            AlarmDataGrid.Columns[6].IsReadOnly = true;
-            AlarmDataGrid.Columns[7].Header = "Disabled";
-
-            AlarmDataGrid.Columns[7].IsReadOnly = false;
+            AlarmDataGrid.Columns[5].Header = "Date Time";
+            AlarmDataGrid.Columns[5].IsReadOnly = true;
+            AlarmDataGrid.Columns[6].Header = "Disabled";
+            AlarmDataGrid.Columns[6].IsReadOnly = false;
+            AlarmDataGrid.Columns[7].Visibility = Visibility.Hidden;
             AlarmDataGrid.Columns[8].Visibility = Visibility.Hidden;
             AlarmDataGrid.Columns[9].Visibility = Visibility.Hidden;
-            AlarmDataGrid.Columns[10].Visibility = Visibility.Hidden;
 
         }
 

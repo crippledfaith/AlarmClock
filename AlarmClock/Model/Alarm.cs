@@ -9,7 +9,7 @@ namespace AlarmClock.Model
     public class Alarm : IDisposable
     {
         public event EventHandler AlarmRaised;
-        Timer _timer = new Timer(1000);
+        readonly Timer _timer = new Timer(1000);
         private DateTime _dateTime;
         public Alarm(bool isEveryday, DateTime dateTime)
         {
@@ -77,10 +77,7 @@ namespace AlarmClock.Model
                         _dateTime = new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, _dateTime.Hour, _dateTime.Minute, _dateTime.Second);
                     return _dateTime;
                 }
-                else
-                {
-                    return _dateTime;
-                }
+                return _dateTime;
             }
             set
             {
@@ -96,9 +93,8 @@ namespace AlarmClock.Model
             }
         }
 
-        public TimeSpan SnoozeTime { get; set; }
         public Snooze Snooze { get; set; }
-        public string DisplayDateTime => !IsEveryday ? DateTime.ToString() : DateTime.ToShortTimeString();
+        public string DisplayDateTime => !IsEveryday ? DateTime.ToString("g") : DateTime.ToString("h:mm:ss tt");
         public bool IsDisabled { get; set; }
         public bool IsActive => TimeLeft.TotalSeconds > 0;
         public string AlarmFile { get; set; }
