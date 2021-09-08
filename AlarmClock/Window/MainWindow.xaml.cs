@@ -140,6 +140,8 @@ namespace AlarmClock
             _isInAlarmScreen = AlarmClockToggle.IsChecked.Value;
             ClockGrid.Visibility = !_isInAlarmScreen ? Visibility.Visible : Visibility.Hidden;
             AlarmGrid.Visibility = _isInAlarmScreen ? Visibility.Visible : Visibility.Hidden;
+            AlarmDateTimePicker.SelectedDateTime = DateTime.Now;
+            AlarmDateTimePicker.DisplayDateStart = DateTime.Now;
             AlarmClockToggle.Content = GetTextForAlarmClockToggle();
         }
 
