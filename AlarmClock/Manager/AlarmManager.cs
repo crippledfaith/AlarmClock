@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Windows;
 using AlarmClock.Model;
 using Newtonsoft.Json;
 
@@ -12,13 +13,22 @@ namespace AlarmClock
         public static event EventHandler AlarmRaised;
         private static List<Alarm> Alarms = new List<Alarm>();
         public static List<Alarm> ActiveAlarms => Alarms.FindAll(q => !q.IsDisabled && q.IsActive);
-
+        private static string _alarmsJsonPath = "";
         static AlarmManager()
         {
+            var applicationName = System.Reflection.Assembly.GetEntryAssembly()?.GetName().Name;
             var alarmsJson = "Alarms.json";
-            if (File.Exists(alarmsJson))
+            var applicationDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                applicationName);
+            if (!Directory.Exists(applicationDataPath))
             {
-                var json = File.ReadAllText(alarmsJson);
+                Directory.CreateDirectory(applicationDataPath);
+            }
+
+            _alarmsJsonPath = Path.Combine(applicationDataPath, alarmsJson);
+            if (File.Exists(_alarmsJsonPath))
+            {
+                var json = File.ReadAllText(_alarmsJsonPath);
                 Alarms = JsonConvert.DeserializeObject<List<Alarm>>(json);
             }
         }
@@ -46,10 +56,9 @@ namespace AlarmClock
         private static void SaveAlarm()
         {
             var serializeObject = JsonConvert.SerializeObject(Alarms, Formatting.Indented);
-            var alarmsJson = "Alarms.json";
-            if (File.Exists(alarmsJson))
-                File.Delete(alarmsJson);
-            File.WriteAllText(alarmsJson, serializeObject);
+            if (File.Exists(_alarmsJsonPath))
+                File.Delete(_alarmsJsonPath);
+            File.WriteAllText(_alarmsJsonPath, serializeObject);
         }
 
         public static List<Alarm> GetAlarms()

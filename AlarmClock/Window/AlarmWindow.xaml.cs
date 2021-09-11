@@ -29,7 +29,7 @@ namespace AlarmClock
         {
             InitializeComponent();
             this.alarm = alarm;
-            TimeLabel.Content = DateTime.Now.ToString();
+            TimeLabel.Content = this.alarm.DateTime.ToString();
             alarm.Snooze.SnoozeRaised += SnoozeSnoozeRaised;
             player = new SoundPlayer(alarm.AlarmFile);
             player.PlayLooping();
