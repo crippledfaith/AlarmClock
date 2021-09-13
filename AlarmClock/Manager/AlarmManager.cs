@@ -17,7 +17,6 @@ namespace AlarmClock
         static AlarmManager()
         {
             var applicationName = System.Reflection.Assembly.GetEntryAssembly()?.GetName().Name;
-            var alarmsJson = "Alarms.json";
             var applicationDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                 applicationName);
             if (!Directory.Exists(applicationDataPath))
@@ -25,6 +24,7 @@ namespace AlarmClock
                 Directory.CreateDirectory(applicationDataPath);
             }
 
+            var alarmsJson = "Alarms.json";
             _alarmsJsonPath = Path.Combine(applicationDataPath, alarmsJson);
             if (File.Exists(_alarmsJsonPath))
             {
