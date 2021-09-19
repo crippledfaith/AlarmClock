@@ -224,12 +224,10 @@ namespace AlarmClock
 
         private void NotifyIconDoubleClick(object sender, EventArgs e)
         {
-
             this.Show();
             this.WindowState = WindowState.Normal;
             ShowInTaskbar = true;
             this.Activate();
-
         }
 
         private void MainWindowOnStateChanged(object sender, EventArgs e)
@@ -239,7 +237,6 @@ namespace AlarmClock
                 this.Hide();
                 ShowInTaskbar = false;
             }
-
         }
 
         public void CreateIconMenuStructure(string caption)
@@ -267,6 +264,7 @@ namespace AlarmClock
         private void MainWindowOnClosing(object sender, CancelEventArgs e)
         {
             _notifyIcon.Visible = false;
+            _notifyIcon.Dispose();
         }
 
 

@@ -70,7 +70,6 @@
                 Grid.Row="1"
                 HorizontalContentAlignment="Center"
                 FontSize="77" />
-
         </Grid>
         <Grid
             x:Name="AlarmGrid"

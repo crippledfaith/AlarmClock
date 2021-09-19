@@ -11,6 +11,7 @@
     Height="169"
     ResizeMode="NoResize"
     ShowCloseButton="False"
+    WindowStartupLocation="CenterScreen"
     Topmost="True"
     WindowStyle="None"
     mc:Ignorable="d">
