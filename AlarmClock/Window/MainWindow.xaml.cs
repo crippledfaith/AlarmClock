@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Timers;
 using System.Windows;
@@ -11,8 +12,10 @@ using System.Windows.Input;
 using AlarmClock.Model;
 using AlarmClock.Properties;
 using MahApps.Metro.Controls;
+using Microsoft.Win32;
 using Application = System.Windows.Application;
 using DateTime = System.DateTime;
+using OpenFileDialog = System.Windows.Forms.OpenFileDialog;
 using Timer = System.Timers.Timer;
 
 namespace AlarmClock
@@ -30,7 +33,7 @@ namespace AlarmClock
         private bool _isEveryday = false;
         private readonly NotifyIcon _notifyIcon;
         private ContextMenuStrip _contextMenu = new ContextMenuStrip();
-        OpenFileDialog opDialog = new OpenFileDialog();
+        OpenFileDialog opDialog = new System.Windows.Forms.OpenFileDialog();
         public MainWindow()
         {
             InitializeComponent();
@@ -52,6 +55,22 @@ namespace AlarmClock
             opDialog.Filter = "Wave File(*.wav)|*.wav";
             AlarmDateTimePicker.SelectedDateTime = DateTime.Now;
             AlarmTimePicker.SelectedDateTime = DateTime.Now;
+            RegistryKey key = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+            key.SetValue("Alarm Clock", Process.GetCurrentProcess().MainModule.FileName);
+            if (Properties.Settings.Default.FistLoaded)
+            {
+                this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+                Settings.Default.FistLoaded = false;
+                Settings.Default.Save();
+            }
+            else
+            {
+                this.WindowStartupLocation = WindowStartupLocation.Manual;
+                this.Top = Settings.Default.MainWindowTop;
+                this.Left = Settings.Default.MainWindowLeft;
+                this.WindowState = (WindowState)Settings.Default.WindowState;
+                StateChange();
+            }
         }
 
         private void AlarmManagerAlarmRaised(object sender, EventArgs e)
@@ -232,6 +251,11 @@ namespace AlarmClock
 
         private void MainWindowOnStateChanged(object sender, EventArgs e)
         {
+            StateChange();
+        }
+
+        private void StateChange()
+        {
             if (this.WindowState == WindowState.Minimized)
             {
                 this.Hide();
@@ -263,6 +287,10 @@ namespace AlarmClock
 
         private void MainWindowOnClosing(object sender, CancelEventArgs e)
         {
+            Settings.Default.MainWindowTop = this.Top;
+            Settings.Default.MainWindowLeft = this.Left;
+            Settings.Default.WindowState = (int)this.WindowState;
+            Settings.Default.Save();
             _notifyIcon.Visible = false;
             _notifyIcon.Dispose();
         }
